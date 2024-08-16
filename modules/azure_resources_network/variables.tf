@@ -18,6 +18,7 @@ variable "address_space" {
 
 variable "subnet_name" {
   type = string
+  default = ""
 }
 
 variable "subnet_prefixes" {

@@ -7,14 +7,13 @@ module "network" {
 
   resource_group_name          = "ClusterK8S"
   address_space                = ["10.0.0.0/16"]
-  subnet_name                  = "default"
   subnet_prefixes              = ["10.0.0.0/24"]
 }
 
-module "vm" {
+module "vm1" {
   source = "./modules/azure_resource_vm_ubuntu"
 
-  vm_name             = "testubuntu"
+  vm_name             = "testubuntu1"
   resource_group_name = module.network.resource_group_name
   location            = module.network.location
   vm_size             = "Standard_B1s"
@@ -25,5 +24,4 @@ module "vm" {
   image_offer          = "0001-com-ubuntu-server-focal"
   image_sku            = "20_04-lts-gen2"
   image_version        = "20.04.202408090"
-  #public_ip_address    = module.network.public_ip_address
 }

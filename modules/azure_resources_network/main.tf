@@ -1,5 +1,6 @@
 locals {
   virtual_network_name = var.virtual_network_name != "" ? var.virtual_network_name : "${var.resource_group_name}-network"
+  subnet_name = var.subnet_name != "" ? var.subnet_name : "${var.resource_group_name}-subnet"
   public_ip_name = var.public_ip_name != "" ? var.public_ip_name : "${var.resource_group_name}-ip"
   network_interface_name = var.network_interface_name != "" ? var.network_interface_name : "${var.resource_group_name}-nic"
   ip_config_name = var.ip_config_name != "" ? var.ip_config_name : "${var.resource_group_name}-ip-config"
@@ -22,7 +23,7 @@ resource "azurerm_virtual_network" "vnet" {
 
 # Création du sous-réseau
 resource "azurerm_subnet" "subnet" {
-  name                 = var.subnet_name
+  name                 = local.subnet_name
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.subnet_prefixes
@@ -77,4 +78,4 @@ resource "azurerm_network_security_group" "nsg" {
 resource "azurerm_network_interface_security_group_association" "nic_nsg" {
   network_interface_id      = azurerm_network_interface.nic.id
   network_security_group_id = azurerm_network_security_group.nsg.id
-}
+} 
