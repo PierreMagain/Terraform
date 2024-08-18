@@ -1,39 +1,60 @@
-variable "vm_name" {
-  type = string
-}
-
 variable "resource_group_name" {
-  type = string
+  description = "Le nom du groupe de ressources où la VM sera créée."
+  type        = string
 }
 
 variable "location" {
-  type = string
+  description = "La région Azure où la VM sera créée."
+  type        = string
+}
+
+variable "vm_name" {
+  description = "Le nom de la machine virtuelle."
+  type        = string
 }
 
 variable "vm_size" {
-  type = string
+  description = "La taille de la machine virtuelle."
+  type        = string
+  default     = "Standard_B1s"
 }
 
 variable "admin_username" {
-  type = string
+  description = "Le nom d'utilisateur administrateur pour la VM."
+  type        = string
+  default     = "azureuser"
 }
 
-variable "network_interface_id" {
-  type = string
+variable "ssh_public_key" {
+  description = "La clé publique SSH pour l'accès à la VM."
+  type        = string
+  default     = "~/.ssh/id_rsa.pub"
 }
 
-variable "public_key_path" {
-  type = string
+variable "vnet_name" {
+  description = "Le nom du réseau virtuel existant."
+  type        = string
 }
 
-variable "os_disk_type" {
-  type = string
-  default = "StandardSSD_ZRS"
+variable "subnet_name" {
+  description = "Le nom du sous-réseau existant."
+  type        = string
 }
 
-variable "os_disk_size" {
-  type = number
-  default = 30
+variable "subnet_id" {
+  description = "L'ID complet du sous-réseau."
+  type        = string
+}
+variable "public_ip_name" {
+  description = "Le nom de l'adresse IP publique à associer à la VM."
+  type        = string
+  default = ""
+}
+
+variable "allowed_ports" {
+  description = "Liste des ports à autoriser pour les connexions entrantes."
+  type        = list(number)
+  default     = [22, 80, 443]
 }
 
 variable "image_publisher" {
