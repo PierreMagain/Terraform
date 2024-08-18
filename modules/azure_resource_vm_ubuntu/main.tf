@@ -10,11 +10,12 @@ resource "azurerm_network_interface" "nic" {
     name                          = "internal"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.public_ip.id
+    public_ip_address_id          = var.assign_public_ip ? azurerm_public_ip.public_ip[0].id : null
   }
 }
 
 resource "azurerm_public_ip" "public_ip" {
+  count               = var.assign_public_ip ? 1 : 0
   name                = local.public_ip_name
   location            = var.location
   resource_group_name = var.resource_group_name

@@ -25,6 +25,7 @@ module "vm1" {
   subnet_id           = module.network.subnet_id
   vm_name             = "test1"
   vm_size             = "Standard_B1s"
+  assign_public_ip    = true
 }
 
 module "vm2" {
@@ -36,4 +37,17 @@ module "vm2" {
   subnet_id           = module.network.subnet_id
   vm_name             = "test2"
   vm_size             = "Standard_B1s"
+  assign_public_ip    = false
+}
+
+module "vm3" {
+  source              = "./modules/azure_resource_vm_ubuntu"
+  resource_group_name = module.resource_group.resource_group_name
+  location            = module.resource_group.resource_group_location
+  vnet_name           = module.network.vnet_name
+  subnet_name         = module.network.subnet_name
+  subnet_id           = module.network.subnet_id
+  vm_name             = "test3"
+  vm_size             = "Standard_B1s"
+  assign_public_ip    = true
 }
