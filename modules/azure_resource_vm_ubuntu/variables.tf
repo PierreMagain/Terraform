@@ -70,3 +70,15 @@ variable "image_version" {
   type = string
   default = "20.04.202408090"
 }
+
+variable "docker_install" {
+  description = "True if Docker should be installed on the VM."
+  type        = bool
+  default     = false
+}
+
+variable "ssh_private_key" {
+  description = "Path to the SSH private key used to connect to the VM."
+  type        = string
+  default     = "~/.ssh/id_rsa"
+}

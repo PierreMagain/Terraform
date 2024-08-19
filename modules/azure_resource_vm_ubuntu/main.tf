@@ -93,3 +93,13 @@ resource "azurerm_linux_virtual_machine" "vm" {
     Name = var.vm_name
   }
 }
+
+module "docker_install" {
+  source = "../docker_install"
+
+  assign_docker   = var.docker_install
+  ssh_user        = var.admin_username
+  ssh_private_key = var.ssh_private_key
+  vm_ip           = azurerm_linux_virtual_machine.vm.public_ip_address
+  depends_on      = [azurerm_linux_virtual_machine.vm]
+}
