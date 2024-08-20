@@ -47,11 +47,6 @@ variable "public_ip_name" {
   default     = ""
 }
 
-variable "assign_public_ip" {
-  type = bool
-  default = false
-}
-
 variable "allowed_ports" {
   type        = list(number)
   default     = [22, 80, 443]
