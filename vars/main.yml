@@ -1,0 +1,17 @@
+---
+main_user: 'magainp'
+# published_port: '1480'
+http_port: '80'
+https_port: '443'
+
+# HAproxy
+cms_haproxy_lines:
+  - '# ligne1'
+  - '# ligne2'
+
+backend_servers:
+  - "web1 k5node1"
+  - "web2 k5node2"
+http_backend_port: '30005'
+
+port_to_open: '30005/tcp'

@@ -1,0 +1,50 @@
+---
+- name: All Servers
+  hosts: all
+  become: true
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Common OS tasks
+      ansible.builtin.include_role:
+        name: os_common
+
+# - name: Proxy Servers
+#   hosts: proxy
+#   become: true
+#   vars_files:
+#     - vars/main.yml
+#   tasks:
+#     - name: Install HAproxy
+#       ansible.builtin.include_role:
+#         name: haproxy_install
+
+- name: Install MICROK8S
+  hosts: kube
+  become: true
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Install Microk8s
+      ansible.builtin.include_role:
+        name: microk8s_install
+
+- name: Generate Token
+  hosts: kube_master
+  become: true
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Generate Microk8s Token
+      ansible.builtin.include_role:
+        name: microk8s_generate_token
+
+- name: JOIN NODES
+  hosts: kube_node
+  become: true
+  vars_files:
+    - vars/main.yml
+  tasks:
+    - name: Join nodes to the cluster
+      ansible.builtin.include_role:
+        name: microk8s_join_node

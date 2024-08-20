@@ -3,7 +3,7 @@ output "vm_name" {
 }
 
 output "public_ip_address" {
-  value       = var.assign_public_ip ? azurerm_public_ip.public_ip[0].ip_address : null
+  value       = azurerm_public_ip.public_ip[0].ip_address
 }
 
 output "admin_username" {

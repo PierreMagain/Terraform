@@ -19,7 +19,7 @@ resource "azurerm_public_ip" "public_ip" {
   name                = local.public_ip_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
   sku                 = "Basic"
 }
 
@@ -48,6 +48,18 @@ resource "azurerm_network_security_group" "nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_ranges    = [80, 443]
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+   security_rule {
+    name                       = "AllowMicroK8sPort"
+    priority                   = 1003
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_ranges    = [25000, 16443, 12379, 10250, 10255, 10257, 10259, 19001]
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -92,14 +104,4 @@ resource "azurerm_linux_virtual_machine" "vm" {
   tags = {
     Name = var.vm_name
   }
-}
-
-module "docker_install" {
-  source = "../docker_install"
-
-  assign_docker   = var.docker_install
-  ssh_user        = var.admin_username
-  ssh_private_key = var.ssh_private_key
-  vm_ip           = azurerm_linux_virtual_machine.vm.public_ip_address
-  depends_on      = [azurerm_linux_virtual_machine.vm]
 }
