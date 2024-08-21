@@ -1,0 +1,12 @@
+---
+- name: (DEBIAN) Include variables
+  ansible.builtin.include_vars:
+    file: debian.yml
+
+- name: (DEBIAN) Install HAproxy
+  ansible.builtin.apt:
+    name:
+      - haproxy
+      - python3-openssl
+    state: present
+  notify: Restart-Enable HAproxy

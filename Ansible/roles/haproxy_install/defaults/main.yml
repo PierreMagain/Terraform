@@ -1,0 +1,10 @@
+---
+main_user: 'magainp'
+server_name: www.stars.lan
+http_port: '80'
+https_ports: '443'
+http_backend_port: '80'
+backend_servers:
+  - "web1 hostname1"
+  - "web2 hostname2"
+  - "web3 hostname3"

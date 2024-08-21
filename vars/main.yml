@@ -1,5 +1,6 @@
 ---
 main_user: 'magainp'
+remote_user: 'azureuser'
 # published_port: '1480'
 http_port: '80'
 https_port: '443'

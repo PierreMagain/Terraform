@@ -1,0 +1,33 @@
+---
+- name: (REDHAT) Include variables
+  ansible.builtin.include_vars:
+    file: redhat.yml
+
+- name: (REDHAT) Install EPEL repository
+  ansible.builtin.dnf:
+    name:
+      - epel-release
+    state: present
+    update_cache: true
+
+- name: (REDHAT) Install required packages
+  ansible.builtin.dnf:
+    name:
+      - bash-completion
+      - rsync
+      - python3-libselinux
+      - python3-policycoreutils
+      - python3-firewall
+    state: present
+    update_cache: true
+
+- name: (REDHAT) Disable SElinux
+  ansible.posix.selinux:
+    state: disabled
+
+- name: (REDHAT) Upgrade the system
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest # noqa=: package-latest
+    update_cache: true
+...

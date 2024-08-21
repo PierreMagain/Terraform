@@ -1,0 +1,74 @@
+---
+- name: Debian family tasks
+  import_tasks: debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Redhat family tasks
+  import_tasks: redhat.yml
+  when: ansible_os_family in ['Redhat', 'Rocky']
+
+- name: Generate SSL private key
+  community.crypto.openssl_privatekey:
+    path: "{{ haproxy_ssl_key }}"
+    size: '4096'
+  notify: Restart-Enable HAproxy
+
+- name: Generate SSL CSR
+  community.crypto.openssl_csr:
+    path: "{{ haproxy_ssl_csr }}"
+    privatekey_path: "{{ haproxy_ssl_key }}"
+    country_name: BE
+    state_or_province_name: Liege
+    organization_name: Technifutur
+    organizational_unit_name: IT
+    email_address: admin.stars.lan
+    common_name: "{{ server_name }}"
+  notify: Restart-Enable HAproxy
+
+- name:  Generate SSL CRT
+  openssl_certificate:
+    path: "{{ haproxy_ssl_crt }}"
+    privatekey_path: "{{ haproxy_ssl_key }}"
+    csr_path: "{{ haproxy_ssl_csr }}"
+    provider: selfsigned
+  notify: Restart-Enable HAproxy
+
+- name: Generate SSL COMBO (key+crt)
+  ansible.builtin.shell:
+    cmd: cat "{{ haproxy_ssl_key }}" "{{ haproxy_ssl_crt }}" > "{{ haproxy_ssl_combo }}"
+  notify: Restart-Enable HAproxy
+
+- name: Template "haproxy.conf"
+  ansible.builtin.template:
+    src: "{{ haproxy_template }}"
+    dest: "{{ haproxy_conf }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart-Enable HAproxy
+
+- name: Add CMS Configuration
+  ansible.builtin.lineinfile:
+    path: "{{ haproxy_conf }}"
+    insertafter: '# Add CMS specific config here'
+    line: "    {{ item }}"
+  loop: "{{ cms_haproxy_lines | reverse }}"
+  notify: Restart-Enable HAproxy
+
+- name: Add the list of backend servers
+  ansible.builtin.lineinfile:
+    path: "{{ haproxy_conf }}"
+    insertafter: '# Add backend servers here'
+    line: "    server {{ item }}:{{ http_backend_port }} check"
+  loop: "{{ backend_servers | reverse }}"
+  notify: Restart-Enable HAproxy
+
+- name: Open external HAproxy ports
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    state: enabled
+    immediate: true
+    permanent: true
+  loop:
+    - http
+    - https

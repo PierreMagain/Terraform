@@ -1,0 +1,8 @@
+---
+haproxy_service: haproxy.service
+haproxy_ssl_key: /etc/pki/tls/private/haproxy.key
+haproxy_ssl_crt: /etc/pki/tls/certs/haproxy.crt
+haproxy_ssl_csr: /etc/pki/tls/haproxy.csr
+haproxy_ssl_combo: /etc/pki/tls/certs/haproxy-bundle.crt
+haproxy_template: redhat-haproxy.conf.j2
+haproxy_conf: /etc/haproxy/haproxy.cfg

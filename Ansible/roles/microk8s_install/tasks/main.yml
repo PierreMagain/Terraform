@@ -1,0 +1,36 @@
+- name: Install Microk8s with snap
+  community.general.snap:
+    name:
+      - microk8s
+    channel: '1.30/stable'
+    classic: true
+    state: present
+
+- name: Add "remote_user" in "microk8s" group
+  ansible.builtin.user:
+    name: "{{ remote_user }}"
+    groups: microk8s
+    append: true
+    state: present
+
+- name: Create ".kube" directory
+  ansible.builtin.file:
+    path: "/home/{{ remote_user }}/.kube"
+    state: directory
+    mode: '0700'
+
+- name: Set ownership of ".kube" directory to remote_user
+  ansible.builtin.file:
+    path: "/home/{{ remote_user }}/.kube"
+    owner: "{{ remote_user }}"
+    group: "{{ remote_user }}"
+    recurse: true
+
+- name: Add aliases in ".bashrc"
+  ansible.builtin.lineinfile:
+    path: "/home/{{ remote_user }}/.bashrc"
+    line: "{{ item }}"
+    state: present
+  loop:
+    - alias watch='watch '
+    - alias kubectl='microk8s kubectl'

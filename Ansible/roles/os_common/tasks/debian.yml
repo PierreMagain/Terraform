@@ -1,0 +1,33 @@
+---
+- name: (DEBIAN) Include variables
+  ansible.builtin.include_vars:
+    file: debian.yml
+
+- name: (DEBIAN) Add 'll' alias
+  ansible.builtin.lineinfile:
+    path: "/home/{{ ansible_user }}/.bashrc"
+    line: alias ll='ls -la --color'
+    state: present
+  notify: Source file
+
+- name: (DEBIAN) Install required packages
+  ansible.builtin.apt:
+    name:
+      - htop
+      - rsync
+      - python3-firewall
+    state: present
+    update_cache: true
+
+- name: (DEBIAN) Upgrade the system
+  ansible.builtin.apt:
+    name: "*"
+    state: latest # noqa=: package-latest
+    update_cache: true
+
+- name: (DEBIAN) Modify /etc/hosts
+  ansible.builtin.lineinfile:
+    path: '/etc/hosts'
+    regex: '^127.0.1.1'
+    line: "{{ ansible_host }}  {{ inventory_hostname }}"
+...

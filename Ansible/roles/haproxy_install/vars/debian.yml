@@ -1,0 +1,8 @@
+---
+haproxy_service: haproxy.service
+haproxy_ssl_key: /etc/ssl/private/haproxy.key
+haproxy_ssl_crt: /etc/ssl/certs/haproxy.crt
+haproxy_ssl_csr: /etc/ssl/haproxy.csr
+haproxy_ssl_combo: /etc/ssl/certs/haproxy-bundle.crt
+haproxy_template: debian-haproxy.conf.j2
+haproxy_conf: /etc/haproxy/haproxy.cfg

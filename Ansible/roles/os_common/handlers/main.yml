@@ -1,0 +1,12 @@
+---
+- name: Restart SSH
+  ansible.builtin.service:
+    name: "{{ ssh_service }}"
+    state: restarted
+    enabled: true
+
+- name: Source file
+  ansible.builtin.shell:
+    cmd: "source {{ file_to_source }}"
+    executable: /bin/bash
+...

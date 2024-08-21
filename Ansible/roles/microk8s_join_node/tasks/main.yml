@@ -1,0 +1,4 @@
+---
+- name: Add the node to the cluster
+  ansible.builtin.shell:
+    cmd: "{{ lookup('ansible.builtin.file', '/home/{{ main_user }}/Documents/Terraform/master/{{ inventory_hostname }}-token') }} --worker"

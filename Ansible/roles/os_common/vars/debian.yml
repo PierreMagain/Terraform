@@ -1,0 +1,4 @@
+---
+ssh_service: ssh.service
+file_to_source: "/home/{{ ansible_user }}/.bashrc"
+...

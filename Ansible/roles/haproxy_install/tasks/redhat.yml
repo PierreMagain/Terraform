@@ -1,0 +1,18 @@
+---
+- name: (REDHAT) Include variables
+  ansible.builtin.include_vars:
+    file: redhat.yml
+
+- name: (REDHAT) Install HAproxy
+  ansible.builtin.dnf:
+    name:
+      - haproxy
+      - python3-cryptography
+    state: latest
+  notify: Restart-Enable HAproxy
+
+- name: (REDHAT) Start-Enable HAproxy
+  ansible.builtin.service:
+    name: "{{ haproxy_service }}"
+    state: started
+    enabled: true

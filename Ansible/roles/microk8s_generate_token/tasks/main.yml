@@ -1,0 +1,12 @@
+---
+- name: Generate Microk8s tokens remotelly
+  ansible.builtin.shell:
+    cmd: "microk8s add-node | grep microk8s | head -n 1 > {{ item }}-token"
+  loop: "{{ groups['kube_node'] | list }}"
+
+- name: Copy "microk8s" tokens locally
+  ansible.builtin.fetch:
+    src: "/home/{{  remote_user }}/{{ item }}-token"
+    dest: "/home/{{ main_user }}/Documents/Terraform/master/{{ item }}-token"
+    flat: true
+  loop: "{{ groups['kube_node'] | list }}"
